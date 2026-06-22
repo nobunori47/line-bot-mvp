@@ -10,7 +10,7 @@ export default function BroadcastPage() {
 
   if (state.step === 'done') {
     return (
-      <div className="flex flex-col gap-6">
+      <div key="done" className="flex flex-col gap-6">
         <h1 className="text-xl font-bold text-gray-800">送信完了</h1>
         <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
@@ -39,7 +39,7 @@ export default function BroadcastPage() {
 
   if (state.step === 'confirm') {
     return (
-      <div className="flex flex-col gap-6">
+      <div key="confirm" className="flex flex-col gap-6">
         <h1 className="text-xl font-bold text-gray-800">送信内容の確認</h1>
         <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col gap-5">
           <div>
@@ -102,7 +102,7 @@ export default function BroadcastPage() {
 
   // step === 'input'
   return (
-    <div className="flex flex-col gap-6">
+    <div key="input" className="flex flex-col gap-6">
       <h1 className="text-xl font-bold text-gray-800">お知らせ配信</h1>
       <form
         action={action}
