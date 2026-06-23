@@ -76,9 +76,8 @@ npm install
 LINE_CHANNEL_ACCESS_TOKEN=
 LINE_CHANNEL_SECRET=
 ANTHROPIC_API_KEY=
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_URL=
+SUPABASE_SECRET_KEY=
 LINE_OWNER_USER_ID=
 ADMIN_PASSWORD=
 ```
@@ -86,7 +85,7 @@ ADMIN_PASSWORD=
 各値の取得方法：
 - `LINE_CHANNEL_*` — [LINE Developers コンソール](https://developers.line.biz/console/) のチャネル設定
 - `ANTHROPIC_API_KEY` — [Anthropic Console](https://console.anthropic.com/)
-- `SUPABASE_*` — [Supabase ダッシュボード](https://supabase.com/dashboard) のプロジェクト設定
+- `SUPABASE_URL` / `SUPABASE_SECRET_KEY` — [Supabase ダッシュボード](https://supabase.com/dashboard) のプロジェクト設定
 - `LINE_OWNER_USER_ID` — オーナー自身の LINE ユーザー ID
 - `ADMIN_PASSWORD` — 管理画面ログインに使う任意のパスワード
 
