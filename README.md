@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 美容室向け LINE Bot + AI 自動応答システム
 
-## Getting Started
+美容室のお客さまから届く LINE メッセージに AI が自動で回答するシステムです。回答に自信がない場合はオーナーに通知し、管理画面から FAQ・メニュー・お知らせを管理できます。
 
-First, run the development server:
+[ここにスクリーンショット：ダッシュボード画面]
+
+## 主な機能
+
+| 機能 | 説明 |
+|---|---|
+| FAQ 自動応答 | 登録済み FAQ をもとに AI がお客さまの質問へ自動返答 |
+| エスカレーション通知 | AI の確信度が低い場合（スコア 4 以下）、オーナーの LINE に通知 |
+| 管理画面（FAQ CRUD） | FAQ の追加・編集・削除 |
+| 管理画面（メニュー管理） | メニュー名・料金・説明の追加・編集・削除 |
+| 会話ログ | ユーザー単位の会話履歴・エスカレーション状況の確認 |
+| お知らせ配信 | 過去に LINE でやり取りしたユーザー全員への一斉配信（2段階確認あり） |
+| 管理画面認証 | HMAC-SHA256 Cookie による管理者ログイン |
+
+[ここにスクリーンショット：FAQ管理画面]
+
+[ここにスクリーンショット：会話ログ画面]
+
+## 使用技術
+
+| カテゴリ | 技術 |
+|---|---|
+| フレームワーク | [Next.js 16](https://nextjs.org)（App Router） |
+| 言語 | TypeScript（strict モード） |
+| スタイリング | Tailwind CSS |
+| データベース | [Supabase](https://supabase.com) |
+| AI | [Claude API](https://www.anthropic.com)（Anthropic） |
+| メッセージング | [LINE Messaging API](https://developers.line.biz/ja/services/messaging-api/) |
+| ホスティング | [Vercel](https://vercel.com) |
+
+## 公開 URL
+
+```
+https://line-bot-mvp.vercel.app
+```
+
+## システム構成
+
+```
+LINE ユーザー
+  └─ メッセージ送信
+       └─ Webhook（POST /api/webhook）
+            ├─ Supabase（FAQ・メニュー取得）
+            ├─ Claude API（回答生成・確信度スコアリング）
+            └─ LINE Messaging API
+                 ├─ 確信度 ≥ 5 → ユーザーへ返信
+                 └─ 確信度 ≤ 4 → オーナーにエスカレーション通知
+
+管理者
+  └─ /admin/*（認証済み）
+       ├─ /admin/faqs       — FAQ 管理
+       ├─ /admin/menus      — メニュー管理
+       ├─ /admin/conversations — 会話ログ
+       └─ /admin/broadcast  — お知らせ配信
+```
+
+## セットアップ
+
+### 1. リポジトリのクローン
+
+```bash
+git clone https://github.com/nobunori47/line-bot-mvp.git
+cd line-bot-mvp
+npm install
+```
+
+### 2. 環境変数の設定
+
+`.env.local` を作成し、以下を設定してください。
+
+```env
+LINE_CHANNEL_ACCESS_TOKEN=
+LINE_CHANNEL_SECRET=
+ANTHROPIC_API_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+LINE_OWNER_USER_ID=
+ADMIN_PASSWORD=
+```
+
+各値の取得方法：
+- `LINE_CHANNEL_*` — [LINE Developers コンソール](https://developers.line.biz/console/) のチャネル設定
+- `ANTHROPIC_API_KEY` — [Anthropic Console](https://console.anthropic.com/)
+- `SUPABASE_*` — [Supabase ダッシュボード](https://supabase.com/dashboard) のプロジェクト設定
+- `LINE_OWNER_USER_ID` — オーナー自身の LINE ユーザー ID
+- `ADMIN_PASSWORD` — 管理画面ログインに使う任意のパスワード
+
+### 3. Supabase テーブルの作成
+
+Supabase の SQL エディタで以下を実行してください。
+
+```sql
+create table faq (
+  id uuid primary key default gen_random_uuid(),
+  question text not null,
+  answer text not null,
+  category text not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table menus (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  price integer not null,
+  description text not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table conversations (
+  id uuid primary key default gen_random_uuid(),
+  line_user_id text not null,
+  user_message text not null,
+  bot_response text not null,
+  confidence integer not null,
+  confidence_label text not null,
+  escalated boolean not null default false,
+  created_at timestamptz default now()
+);
+```
+
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000/admin](http://localhost:3000/admin) を開いてください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+LINE Webhook の接続には [ngrok](https://ngrok.com/) 等のトンネリングツールが必要です。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+ngrok http 3000
+```
 
-## Learn More
+取得した URL（例：`https://xxxx.ngrok.io`）を LINE Developers コンソールの Webhook URL に設定してください。
 
-To learn more about Next.js, take a look at the following resources:
+## 主なコマンド
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev      # 開発サーバー起動（http://localhost:3000）
+npm run build    # 本番ビルド（型チェックを含む）
+npm run lint     # ESLint チェック
+npx tsc --noEmit # 型チェックのみ
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ライセンス
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
