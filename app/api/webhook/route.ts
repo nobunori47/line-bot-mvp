@@ -93,7 +93,7 @@ export async function POST(request: Request): Promise<Response> {
     const msgEvent = event as LineMessageEvent
     if (msgEvent.message.type !== 'text') continue
 
-    void processMessage(
+    await processMessage(
       msgEvent.replyToken,
       msgEvent.source.userId,
       msgEvent.message.text
