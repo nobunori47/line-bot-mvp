@@ -18,9 +18,13 @@
 | お知らせ配信 | 過去に LINE でやり取りしたユーザー全員への一斉配信（2段階確認あり） |
 | 管理画面認証 | HMAC-SHA256 Cookie による管理者ログイン |
 
-[ここにスクリーンショット：FAQ管理画面]
+[FAQ管理画面]
+<img width="2940" height="1522" alt="59A658D7-890F-4A65-B291-63165426CFA8" src="https://github.com/user-attachments/assets/0f716a6e-4be2-4c4f-88d2-709f9c705afd" />
 
-[ここにスクリーンショット：会話ログ画面]
+
+[会話ログ画面]
+<img width="2940" height="1522" alt="56CA320F-FC19-415D-B030-20E01D5C7D18" src="https://github.com/user-attachments/assets/c2707b3c-bee1-4ef2-a45a-1672c7f48b7f" />
+
 
 ## 使用技術
 
