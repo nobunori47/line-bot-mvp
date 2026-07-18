@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { fetchConversationUserSummaries } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic';
+
 function formatJstShort(isoString: string): string {
   return new Date(isoString).toLocaleString('ja-JP', {
     timeZone: 'Asia/Tokyo',
