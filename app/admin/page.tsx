@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import {
 
-export const dynamic = 'force-dynamic';
   fetchFaqCount,
   fetchTodayConversationCount,
   fetchEscalationCount,
 } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic';
 
 const NAV_LINKS = [
   { href: '/admin/faqs', label: 'FAQ 管理' },
