@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { fetchFaqById } from '@/lib/supabase'
 import { EditForm } from './EditForm'
 
+export const dynamic = 'force-dynamic';
+
 export default async function EditFaqPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   let faq

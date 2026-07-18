@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { fetchAllFaqs } from '@/lib/supabase'
 import { DeleteButton } from './DeleteButton'
 
+export const dynamic = 'force-dynamic';
+
 export default async function FaqsPage() {
   const faqs = await fetchAllFaqs()
 

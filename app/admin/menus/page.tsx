@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { fetchAllMenus } from '@/lib/supabase'
 import { DeleteButton } from './DeleteButton'
 
+export const dynamic = 'force-dynamic';
+
 export default async function MenusPage() {
   const menus = await fetchAllMenus()
 

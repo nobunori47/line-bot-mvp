@@ -4,6 +4,8 @@ import { useActionState } from 'react'
 import Link from 'next/link'
 import { createFaqAction } from '../actions'
 
+export const dynamic = 'force-dynamic';
+
 export default function NewFaqPage() {
   const [error, action, isPending] = useActionState(createFaqAction, null)
 

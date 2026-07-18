@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { fetchConversationsByUser } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic';
+
 function formatJstFull(isoString: string): string {
   return new Date(isoString).toLocaleString('ja-JP', {
     timeZone: 'Asia/Tokyo',

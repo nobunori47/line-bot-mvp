@@ -3,6 +3,8 @@
 import { useActionState } from 'react'
 import { broadcastAction, type BroadcastState } from './actions'
 
+export const dynamic = 'force-dynamic';
+
 const initialState: BroadcastState = { step: 'input' }
 
 export default function BroadcastPage() {

@@ -4,6 +4,8 @@ import { useActionState } from 'react'
 import Link from 'next/link'
 import { createMenuAction } from '../actions'
 
+export const dynamic = 'force-dynamic';
+
 export default function NewMenuPage() {
   const [error, action, isPending] = useActionState(createMenuAction, null)
 
